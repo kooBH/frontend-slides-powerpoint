@@ -1,18 +1,18 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "frontend-slides",
-  "description": "Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files.",
+  "name": "powerpoint-slides",
+  "description": "Create distinctive, fully editable PowerPoint (.pptx) decks from scratch or by restyling an existing PowerPoint file.",
   "owner": {
-    "name": "zarazhangrui",
-    "url": "https://github.com/zarazhangrui"
+    "name": "KooBH",
+    "url": "https://github.com/KooBH"
   },
   "plugins": [
     {
-      "name": "frontend-slides",
-      "description": "Zero-dependency HTML presentation generator with safe presets, bold template-library styles, PPT conversion, and anti-AI-slop design philosophy.",
-      "source": "./plugins/frontend-slides",
+      "name": "powerpoint-slides",
+      "description": "Native PowerPoint deck generator with safe presets, bold template-library styles, rendered style previews, transitions and entrance animations, existing-deck restyling, and an anti-AI-slop design philosophy.",
+      "source": "./plugins/powerpoint-slides",
       "category": "productivity",
-      "tags": ["presentations", "slides", "html", "design", "powerpoint", "templates"]
+      "tags": ["presentations", "slides", "powerpoint", "pptx", "design", "templates"]
     }
   ]
 }

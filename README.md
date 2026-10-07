@@ -1,53 +1,52 @@
-# Frontend Slides
+# PowerPoint Slides
 
-A coding-agent skill for creating stunning HTML presentations — from scratch or by converting PowerPoint files. It is packaged as a Claude Code plugin, and the core `SKILL.md` can also be read by other coding agents with filesystem and shell access.
+A coding-agent skill for creating distinctive, fully editable **PowerPoint (.pptx)** decks — from scratch or by restyling an existing PowerPoint file. It is packaged as a Claude Code plugin, and the core `SKILL.md` can also be read by other coding agents with filesystem and shell access.
 
-## 📺 Watch the Walkthrough & Tutorial
-
-New here? This beginner-friendly video walks you through the whole thing, start to finish.
-
-<a href="https://www.youtube.com/watch?v=372Iksaz8b0" title="Frontend Slides — walkthrough & tutorial (beginner-friendly)">
-  <img src="https://img.youtube.com/vi/372Iksaz8b0/maxresdefault.jpg" alt="Watch the Frontend Slides walkthrough and tutorial on YouTube" width="100%" />
-</a>
-
-> ▶️ **[Watch on YouTube →](https://www.youtube.com/watch?v=372Iksaz8b0)** (beginner-friendly walkthrough and tutorial)
+This is a PowerPoint-only fork of [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides). The original produces animated HTML decks; this version keeps its workflow and design philosophy ("show, don't tell", anti-AI-slop, progressive disclosure, the bold template pack) and replaces the HTML output with native PowerPoint: real theme colors, slide layouts and placeholders, speaker notes, native charts and tables, transitions, and entrance animations.
 
 ## What This Does
 
-**Frontend Slides** helps non-designers create beautiful web presentations without knowing CSS or JavaScript. It uses a "show, don't tell" approach: instead of asking you to describe your aesthetic preferences in words, it generates visual previews and lets you pick what you like.
-
-Here is a deck about the skill, made through the skill:
-
-https://github.com/user-attachments/assets/ef57333e-f879-432a-afb9-180388982478
+**PowerPoint Slides** helps non-designers create beautiful decks without fighting PowerPoint. It uses a "show, don't tell" approach: instead of asking you to describe your aesthetic preferences in words, it builds three candidate title slides, renders them to images, and lets you pick what you like. Then it generates the whole deck in that style.
 
 ### Key Features
 
-- **Zero Dependencies** — Single HTML files with inline CSS/JS. No npm, no build tools, no frameworks.
-- **Visual Style Discovery** — Can't articulate design preferences? No problem. Pick from generated visual previews.
-- **PPT Conversion** — Convert existing PowerPoint files to web, preserving all images and content.
-- **Anti-AI-Slop** — Curated distinctive styles that avoid generic AI aesthetics (bye-bye, purple gradients on white).
-- **Bold Template Pack** — Optional design-forward templates from `beautiful-html-templates`, loaded progressively so safe presets still work as the default fallback.
-- **Production Quality** — Accessible, fixed 16:9, well-commented code you can customize.
+- **Native .pptx output** — Opens in PowerPoint, Keynote, Google Slides, and LibreOffice. Everything is a real, editable object.
+- **Structured, restylable decks** — Theme colors and fonts are written into the file, and every slide frame is a named layout with placeholders, so Design → Variants and View → Slide Master work the way they should.
+- **Visual Style Discovery** — Can't articulate design preferences? Pick from rendered previews.
+- **Restyle an existing PowerPoint** — Extract every slide's text, images, tables, chart data, and notes, then rebuild in a new design.
+- **Anti-AI-Slop** — Curated distinctive styles that avoid generic aesthetics (no Calibri-on-white, no blue title bars, no accent lines under titles).
+- **Bold Template Pack** — 34 optional design-forward systems from `beautiful-html-templates`, loaded progressively so safe presets still work as the default fallback.
+- **Motion that stays editable** — Consistent transitions and one orchestrated, staggered entrance per slide, injected as native PowerPoint animations you can change in the Animations pane.
+- **Built-in QA** — Structural validation, an outline dump, and pixel-accurate rendering (PowerPoint itself on Windows, LibreOffice elsewhere) so the agent looks at every slide before handing it over.
+- **Regenerable** — Each deck ships with the `build-deck.js` that produced it. Change a color or a sentence and rebuild.
+
+## Requirements
+
+- A local coding agent with filesystem access and the ability to run shell commands (Claude Code is required only for the marketplace install and the `/powerpoint-slides:powerpoint-slides` command)
+- **Node.js 18+** with `pptxgenjs` (`npm install pptxgenjs` in the deck folder; the skill does this for you)
+- **Python 3.9+** with `python-pptx` (restyling existing decks) and `Pillow` (background images, contact sheets): `pip install python-pptx Pillow`
+- **For rendering previews and QA:** Microsoft PowerPoint on Windows (used through COM automation) **or** [LibreOffice](https://www.libreoffice.org/download/) on any platform. Per-slide PNGs from LibreOffice additionally need `pip install pymupdf` or Poppler's `pdftoppm`.
+- Fonts: the distinctive fonts each style names must be installed to render as designed. The skill checks with `scripts/list-fonts.py`, tells you what is missing, and uses the style's Office-safe fallback pair meanwhile.
 
 ## Installation
 
 ### Via Claude Code Custom Marketplace Source
 
-Install directly from this public GitHub repo. Run these as two separate Claude Code messages; do not paste both lines into the prompt at once.
+Install directly from this GitHub repo. Run these as two separate Claude Code messages; do not paste both lines into the prompt at once.
 
 ```text
-/plugin marketplace add https://github.com/zarazhangrui/frontend-slides
+/plugin marketplace add https://github.com/KooBH/frontend-slides-powerpoint
 ```
 
 After that finishes, run:
 
 ```text
-/plugin install frontend-slides@frontend-slides
+/plugin install powerpoint-slides@powerpoint-slides
 ```
 
-Use the HTTPS URL. The shorter `zarazhangrui/frontend-slides` form may make Claude Code try SSH, which can fail if GitHub is not already in your `known_hosts` file.
+Use the HTTPS URL. The shorter `KooBH/frontend-slides-powerpoint` form may make Claude Code try SSH, which can fail if GitHub is not already in your `known_hosts` file.
 
-Then use it by typing `/frontend-slides:frontend-slides` in Claude Code. Claude Code namespaces plugin-installed skills as `/plugin-name:skill-name`.
+Then use it by typing `/powerpoint-slides:powerpoint-slides` in Claude Code. Claude Code namespaces plugin-installed skills as `/plugin-name:skill-name`.
 
 ### Claude Code Manual Installation
 
@@ -55,79 +54,84 @@ Copy the skill files to your Claude Code skills directory:
 
 ```bash
 # Create the skill directory
-mkdir -p ~/.claude/skills/frontend-slides/scripts
+mkdir -p ~/.claude/skills/powerpoint-slides/scripts
 
 # Copy the user-facing skill files
-cp SKILL.md STYLE_PRESETS.md viewport-base.css html-template.md animation-patterns.md ~/.claude/skills/frontend-slides/
-cp -R bold-template-pack ~/.claude/skills/frontend-slides/
-cp scripts/extract-pptx.py scripts/deploy.sh scripts/export-pdf.sh ~/.claude/skills/frontend-slides/scripts/
+cp SKILL.md STYLE_PRESETS.md pptx-template.md animation-patterns.md ~/.claude/skills/powerpoint-slides/
+cp -R bold-template-pack ~/.claude/skills/powerpoint-slides/
+cp scripts/*.py ~/.claude/skills/powerpoint-slides/scripts/
 ```
 
 Or clone directly:
 
 ```bash
-git clone https://github.com/zarazhangrui/frontend-slides.git ~/.claude/skills/frontend-slides
+git clone https://github.com/KooBH/frontend-slides-powerpoint.git ~/.claude/skills/powerpoint-slides
 ```
 
-Then use it by typing `/frontend-slides` in Claude Code. Standalone skills are not namespaced.
+Then use it by typing `/powerpoint-slides` in Claude Code. Standalone skills are not namespaced.
 
 ### Other Coding Agents
 
-Agents such as Codex, Kimi Code, OpenCode, Gemini CLI, or other local coding assistants can use the same core skill. The simplest path is to send the agent this GitHub repo link and ask it to use the Frontend Slides skill:
+Agents such as Codex, Kimi Code, OpenCode, Gemini CLI, or other local coding assistants can use the same core skill. The simplest path is to send the agent this GitHub repo link and ask it to use the PowerPoint Slides skill:
 
 ```text
-https://github.com/zarazhangrui/frontend-slides
+https://github.com/KooBH/frontend-slides-powerpoint
 ```
 
 If the agent can read GitHub repos or browse files, it should start from `SKILL.md` and load only the referenced support files it needs:
 
 - `STYLE_PRESETS.md`
-- `viewport-base.css`
-- `html-template.md`
+- `pptx-template.md`
 - `animation-patterns.md`
 - `bold-template-pack/`
 - `scripts/`
 
 Some agents can also install the skill for you if they have filesystem access and a known local skills directory. If not, they can still follow `SKILL.md` directly for the current session.
 
-The Claude Code plugin gives Claude Code a custom marketplace-source install flow and `/frontend-slides:frontend-slides` command. Other agents usually do not use that command surface.
-
 ## Usage
 
-### Create a New Presentation
+### Create a New Deck
 
 ```text
-/frontend-slides:frontend-slides
+/powerpoint-slides:powerpoint-slides
 
 > "I want to create a pitch deck for my AI startup"
 ```
 
-If installed manually as a standalone Claude Code skill, use `/frontend-slides` instead.
+If installed manually as a standalone Claude Code skill, use `/powerpoint-slides` instead.
 
-In non-Claude agents, ask the agent to use the Frontend Slides skill and point it at this repo or `SKILL.md`.
+In non-Claude agents, ask the agent to use the PowerPoint Slides skill and point it at this repo or `SKILL.md`.
 
 The skill will:
 
-1. Ask about your content (slides, messages, images)
-2. Generate 3 visual style previews for you to compare, inferring the vibe from your brief unless you already named one
+1. Ask about your content (purpose, length, what you have ready, speaking vs reading deck)
+2. Build 3 one-slide style previews, render them to images, and show them to you, inferring the vibe from your brief unless you already named one
 3. Let you pick the visual direction
-4. Create the full presentation in your chosen style
-5. Open it in your browser
+4. Generate the full deck in your chosen style, apply the theme, add motion, validate it, and look at every rendered slide
+5. Open it in PowerPoint and tell you how to tweak it (or ask for changes in chat)
 
-### Convert a PowerPoint
+### Restyle an Existing PowerPoint
 
 ```text
-/frontend-slides:frontend-slides
+/powerpoint-slides:powerpoint-slides
 
-> "Convert my presentation.pptx to a web slideshow"
+> "Redesign my quarterly-review.pptx — it looks like every other deck"
 ```
 
 The skill will:
 
-1. Extract all text, images, and notes from your PPT
-2. Show you the extracted content for confirmation
+1. Extract all text, images, tables, chart data, and notes from the original
+2. Render the original and show you what it found, for confirmation
 3. Let you pick a visual style
-4. Generate an HTML presentation with all your original assets
+4. Generate a new .pptx with all your original content, leaving the original file untouched
+
+### Export
+
+```text
+> "Give me a PDF too"
+```
+
+`scripts/render-pptx.py deck.pptx --pdf-only` writes a PDF; `--out folder/` writes one PNG per slide.
 
 ## Included Styles
 
@@ -147,8 +151,8 @@ The skill will:
 
 ### Specialty
 
-- **Neon Cyber** — Futuristic, particle backgrounds, neon glow
-- **Terminal Green** — Developer-focused, hacker aesthetic
+- **Neon Cyber** — Futuristic, grid-and-glow backgrounds, neon accents
+- **Terminal Green** — Developer-focused, scanlines, monospace
 - **Swiss Modern** — Minimal, Bauhaus-inspired, geometric
 - **Paper & Ink** — Literary, drop caps, pull quotes
 
@@ -168,11 +172,11 @@ The agent reads the compact bold template index first, then loads only the
 shortlisted candidates' small `preview.md` cards for title-slide previews. It
 loads the full `design.md` for exactly one bold template only after the user
 picks that template for the final deck. If the user picks a custom wildcard,
-the agent expands that preview's own CSS and layout system into the full deck.
+the agent expands that preview's own build script and layout system into the full deck.
 
 ## Bold Template Gallery
 
-Frontend Slides can now draw from the 34 bold design systems in [`beautiful-html-templates`](https://github.com/zarazhangrui/beautiful-html-templates). Three screenshots per template show how each visual system handles different slide layouts. Click any template name to inspect the source template library.
+PowerPoint Slides can draw from the 34 bold design systems in [`beautiful-html-templates`](https://github.com/zarazhangrui/beautiful-html-templates). The screenshots below are renders of the source design systems (three per template) and show how each visual system handles different slide layouts; the skill rebuilds the chosen system natively in PowerPoint. Click any template name to inspect the source library.
 
 ### [Soft Editorial](https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/soft-editorial/)
 
@@ -514,80 +518,55 @@ Frontend Slides can now draw from the 34 bold design systems in [`beautiful-html
 
 > Warm cream and rust-red supper-club aesthetic with bold uppercase grotesk headlines, italic Fraunces, and pill-shaped outlined buttons.
 
+## How It Works
+
+Every deck is built by one Node script and finished by a few Python helpers:
+
+```
+build-deck.js  --pptxgenjs-->  deck.pptx
+                                  |  scripts/apply-theme.py      theme colors + fonts into the file
+                                  |  scripts/add-animations.py   transitions + staggered entrance (native, editable)
+                                  |  scripts/check-pptx.py       structural validation + outline
+                                  v  scripts/render-pptx.py      PNG per slide / PDF, for QA and previews
+```
+
+| Script | Purpose |
+| --- | --- |
+| `scripts/apply-theme.py` | Write a `THEME` (12 scheme colors, heading/body/East-Asian fonts) into `ppt/theme/theme1.xml` so scheme colors resolve correctly and PowerPoint's Design tab can recolor the deck |
+| `scripts/add-animations.py` | Add `fade` / `push` / `wipe` / `cover` / `split` / `morph` transitions and `rise` / `fade` / `wipe` / `fly` / `zoom` entrance animations, auto-staggered or click-by-click, per slide or for the whole deck |
+| `scripts/make-background.py` | Render gradients, soft glows, grids, dot patterns, film grain, scanlines, and vignettes to an image for layout backgrounds (pptxgenjs has no gradient fills) |
+| `scripts/check-pptx.py` | Well-formed XML, relationship targets, content types, chart axis declarations, shapes past the slide edge, probable text overflow, leftover placeholder text, empty slides; plus a per-slide outline with notes |
+| `scripts/render-pptx.py` | PowerPoint COM (Windows) or LibreOffice → PNG per slide, PDF, and a labeled contact sheet |
+| `scripts/list-fonts.py` | Which font families are installed; check specific names |
+| `scripts/extract-pptx.py` | Text (with levels), images (deduplicated), tables, chart series, notes, layout names, and bounding boxes from an existing .pptx |
+
+All scripts use the Python standard library except `extract-pptx.py` (python-pptx) and `make-background.py` and the contact sheet (Pillow).
+
 ## Architecture
 
-This skill uses **progressive disclosure** — the main `SKILL.md` is a workflow map, with supporting files loaded on-demand only when needed:
+This skill uses **progressive disclosure** — the main `SKILL.md` is a workflow map, with supporting files loaded on demand only when needed:
 
 | File                      | Purpose                        | Loaded When               |
 | ------------------------- | ------------------------------ | ------------------------- |
 | `SKILL.md`                | Core workflow and rules        | Always (skill invocation) |
-| `STYLE_PRESETS.md`        | 12 curated visual presets      | Phase 2 (style selection) |
+| `STYLE_PRESETS.md`        | 12 curated visual presets with theme colors, fonts, backgrounds | Phase 2 (style selection) |
 | `bold-template-pack/selection-index.json` | Compact bold template metadata for candidate selection | Phase 2 (style selection) |
 | `bold-template-pack/templates/*/preview.md` | Tiny style cards for shortlisted bold previews | Phase 2 after shortlisting |
-| `bold-template-pack/templates/*/design.md` | Full design system for the selected bold template | Phase 3 after user selection |
-| `viewport-base.css`       | Mandatory fixed-stage CSS      | Phase 3 (generation)      |
-| `html-template.md`        | HTML structure and JS features | Phase 3 (generation)      |
-| `animation-patterns.md`   | CSS/JS animation reference     | Phase 3 (generation)      |
-| `scripts/extract-pptx.py` | PPT content extraction         | Phase 4 (conversion)      |
-| `scripts/deploy.sh`       | Deploy to Vercel               | Phase 6 (sharing)         |
-| `scripts/export-pdf.sh`   | Export slides to PDF           | Phase 6 (sharing)         |
-
-Maintenance-only source metadata and regeneration helpers live outside the
-user-facing skill package. Normal users do not need them.
-
-This design follows agent-skill best practices: give the agent a map first,
-then reveal only the specific files needed for the current choice.
+| `bold-template-pack/templates/*/design.md` | Full design system for the selected bold template, with a PowerPoint translation policy | Phase 3 after user selection |
+| `pptx-template.md`        | Build-script architecture, layouts, components, pptxgenjs gotchas | Phase 3 (generation) |
+| `animation-patterns.md`   | Transitions and entrance animations: effect-to-feeling guide | Phase 3 (generation) |
+| `scripts/*.py`            | Theme, animation, background, validation, rendering, font, and extraction helpers | Phases 2–6 |
 
 ## Philosophy
 
-This skill was born from the belief that:
-
 1. **You don't need to be a designer to make beautiful things.** You just need to react to what you see.
-
-2. **Dependencies are debt.** A single HTML file will work in 10 years. A React project from 2019? Good luck.
-
-3. **Generic is forgettable.** Every presentation should feel custom-crafted, not template-generated.
-
-4. **Comments are kindness.** Code should explain itself to future-you (or anyone else who opens it).
-
-## Sharing Your Presentations
-
-After creating a presentation, the skill offers two ways to share it:
-
-### Deploy to a Live URL
-
-One command deploys your slides to a permanent, shareable URL that works on any device — phones, tablets, laptops:
-
-```bash
-bash scripts/deploy.sh ./my-deck/
-# or
-bash scripts/deploy.sh ./presentation.html
-```
-
-Uses [Vercel](https://vercel.com) (free tier). The skill walks you through signup and login if it's your first time.
-
-### Export to PDF
-
-Convert your slides to a PDF for email, Slack, Notion, or printing:
-
-```bash
-bash scripts/export-pdf.sh ./my-deck/index.html
-bash scripts/export-pdf.sh ./presentation.html ./output.pdf
-```
-
-Uses [Playwright](https://playwright.dev) to screenshot each slide at 1920×1080 and combine into a PDF. Installs automatically if needed. Animations are not preserved (it's a static snapshot).
-
-## Requirements
-
-- A local coding agent with filesystem access and the ability to run shell commands
-- Claude Code is required only for the custom marketplace-source install and `/frontend-slides:frontend-slides` command
-- For PPT conversion: Python with `python-pptx` library
-- For URL deployment: Node.js + Vercel account (free)
-- For PDF export: Node.js (Playwright installs automatically)
+2. **The deck belongs to the user, not to the tool.** A native .pptx with real layouts and theme colors can be edited by anyone, forever, without this skill.
+3. **Generic is forgettable.** Every deck should feel custom-crafted for its topic, not template-generated.
+4. **Look before you ship.** The agent renders and inspects every slide; overflow and overlap never reach the user.
 
 ## Credits
 
-Created by [@zarazhangrui](https://github.com/zarazhangrui).
+Original skill, workflow, and design philosophy by [@zarazhangrui](https://github.com/zarazhangrui) ([frontend-slides](https://github.com/zarazhangrui/frontend-slides)). Bold template pack derived from [beautiful-html-templates](https://github.com/zarazhangrui/beautiful-html-templates). PowerPoint conversion by [@KooBH](https://github.com/KooBH).
 
 ## License
 

@@ -1,5 +1,7 @@
 .DS_Store
 .claude-design/
+.powerpoint-slides/
 node_modules/
-.vercel/
+package-lock.json
+*-render/
 *.log
