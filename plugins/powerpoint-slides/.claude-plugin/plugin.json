@@ -1,0 +1,14 @@
+{
+  "name": "powerpoint-slides",
+  "version": "3.0.0",
+  "description": "Native PowerPoint deck generator with safe presets, bold template-library styles, rendered style previews, transitions and entrance animations, existing-deck restyling, and an anti-AI-slop design philosophy.",
+  "skills": "./skills/",
+  "author": {
+    "name": "KooBH",
+    "url": "https://github.com/KooBH"
+  },
+  "homepage": "https://github.com/KooBH/frontend-slides-powerpoint",
+  "repository": "https://github.com/KooBH/frontend-slides-powerpoint",
+  "license": "MIT",
+  "keywords": ["presentations", "slides", "powerpoint", "pptx", "design", "animations", "templates"]
+}
